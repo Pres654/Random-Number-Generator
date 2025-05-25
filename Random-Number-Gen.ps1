@@ -2,10 +2,15 @@ function Write-AsciiArtBanner {
     param (
         [string]$Text
     )
-    Write-Host "======================================================================" -ForegroundColor Cyan
-    $alignmentWidth = [int](($Host.UI.RawUI.WindowSize.Width + $Text.Length) / 2)
-    Write-Host ("{0,$alignmentWidth}" -f $Text) -ForegroundColor Yellow
-    Write-Host "======================================================================" -ForegroundColor Cyan
+    $windowWidth = $Host.UI.RawUI.WindowSize.Width
+    $bannerLine = "=" * $windowWidth
+    $padding = ($windowWidth - $Text.Length) / 2
+    $leftPadding = [int]$padding
+    $rightPadding = [int]($windowWidth - $Text.Length - $leftPadding)
+
+    Write-Host $bannerLine -ForegroundColor Red
+    Write-Host ("{0}{1}{2}" -f (" " * $leftPadding), $Text, (" " * $rightPadding)) -ForegroundColor Red
+    Write-Host $bannerLine -ForegroundColor Red
     Write-Host ""
 }
 
@@ -93,16 +98,16 @@ function Write-AsciiArtNumber {
         if ($asciiDigits.ContainsKey($charKey)) {
             $digitArt = $asciiDigits[$charKey]
             for ($i = 0; $i -lt $digitArt.Length; $i++) {
-                $outputLines[$i] += $digitArt[$i] + "  " 
+                $outputLines[$i] += $digitArt[$i] + "   "
             }
         } else {
             for ($i = 0; $i -lt $outputLines.Length; $i++) {
-                $outputLines[$i] += "?????  "
+                $outputLines[$i] += "?????   "
             }
         }
     }
 
-    Write-Host "Your random number is:" -ForegroundColor Green
+    Write-Host "Your random number is:" -ForegroundColor Red
     foreach ($line in $outputLines) {
         Write-Host $line -ForegroundColor Magenta
     }
@@ -119,7 +124,7 @@ while ($minNumber -eq $null -or -not ($minInput -match "^\d+$")) {
     if ($minInput -match "^\d+$") {
         $minNumber = [int]$minInput
     } else {
-        Write-Host "Invalid input. Please enter a whole number." -ForegroundColor Red
+        Write-Host "Invalid input. Please enter a whole number." -ForegroundColor Pink
     }
 }
 while ($maxNumber -eq $null -or -not ($maxInput -match "^\d+$") -or $maxNumber -lt $minNumber) {
@@ -129,16 +134,16 @@ while ($maxNumber -eq $null -or -not ($maxInput -match "^\d+$") -or $maxNumber -
         if ($tempMax -ge $minNumber) {
             $maxNumber = $tempMax
         } else {
-            Write-Host "Maximum number must be greater than or equal to the minimum number ($minNumber)." -ForegroundColor Red
+            Write-Host "Maximum number must be greater than or equal to the minimum number ($minNumber)." -ForegroundColor Pink
             $maxInput = $null
         }
     } else {
-        Write-Host "Invalid input. Please enter a whole number." -ForegroundColor Red
+        Write-Host "Invalid input. Please enter a whole number." -ForegroundColor Pink
     }
 }
 $randomNumber = Get-Random -Minimum $minNumber -Maximum ($maxNumber + 1)
 Write-Host ""
 Write-AsciiArtNumber -Number $randomNumber
 
-Write-Host "======================================================================" -ForegroundColor Cyan
+Write-Host "======================================================================" -ForegroundColor Red
 Write-Host "Done!" -ForegroundColor Green
