@@ -113,6 +113,29 @@ function Write-AsciiArtNumber {
     }
     Write-Host ""
 }
+
+function Test-IsPrime {
+    param (
+        [int]$number
+    )
+
+    if ($number -lt 2) {
+        return $false
+    }
+    if ($number -eq 2) {
+        return $true
+    }
+    if ($number % 2 -eq 0) {
+        return $false
+    }
+    for ($i = 3; $i -le [Math]::Sqrt($number); $i += 2) {
+        if ($number % $i -eq 0) {
+            return $false
+        }
+    }
+    return $true
+}
+
 Clear-Host
 Write-AsciiArtBanner -Text "RANDOM NUMBER GENERATOR"
 $minNumber = $null
@@ -144,6 +167,24 @@ while ($maxNumber -eq $null -or -not ($maxInput -match "^\d+$") -or $maxNumber -
 $randomNumber = Get-Random -Minimum $minNumber -Maximum ($maxNumber + 1)
 Write-Host ""
 Write-AsciiArtNumber -Number $randomNumber
+
+$wantsPrimeCheck = Read-Host "Would you like to check if the random number $randomNumber is a prime number? (y/n)"
+
+if ($wantsPrimeCheck -eq 'y' -or $wantsPrimeCheck -eq 'Y') {
+    $isPrimeResult = Test-IsPrime -number $randomNumber
+    if ($isPrimeResult) { # $true is implicit
+        Write-Host "The number $randomNumber is prime!" -ForegroundColor Green
+    }
+    else {
+        Write-Host "The number $randomNumber is not prime." -ForegroundColor Yellow
+    }
+}
+elseif ($wantsPrimeCheck -eq 'n' -or $wantsPrimeCheck -eq 'N') {
+    Write-Host "Okay, no primality check requested. Exiting."
+}
+else {
+    Write-Host "Invalid input. Please enter 'y' or 'n'." -ForegroundColor Yellow
+}
 
 Write-Host "======================================================================" -ForegroundColor Red
 Write-Host "Done!" -ForegroundColor Green
