@@ -1,1 +1,1 @@
-A powershell script that lets the user input two numbers and generates a random number between those. Numbers are not generated pseudo-randomly.
+A powershell script that lets the user input two numbers and generates a random number between those. Numbers are not generated pseudo-randomly. The program also checks if the number generated is prime.
